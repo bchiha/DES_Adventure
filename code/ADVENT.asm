@@ -604,8 +604,8 @@ INSTXT:        DB      31,&16,&3A,"Your mission is to find four items"
                DB      31,&16,&6A,"L for look. Find an old man to win!",0
 ABOUTXT:       DB      31,&14,&3A,"This game is written using the"
                DB      31,&14,&44,"Desktop Environment System developed"
-               DB      31,&14,&4E,"by ComSoft. I wanted to write some"
-               DB      31,&14,&58,"code to show off what DES can do."
+               DB      31,&14,&4E,"by Michael Beckett for CampurSoft."
+               DB      31,&14,&58,"I wanted to show off what DES can do"
                DB      31,&14,&62,"This DES Adventure is the result."
                DB      31,&14,&6C,"Check out ",146,15,"Ready? Z80",16,147," on YouTube!",0               
 OKTXT:         DB      18,&02,&20,1,"Ok",0
@@ -664,5 +664,6 @@ PRINT "LOAD SPRITE DATA"
         READ "SPRITE.Z80"
 
 PRINT "ASSEMBLING COMPLETE..."
-ADVENT  $$$ÿ ÿÌ3ÀÃÀ  À  ÏóóóÀÃ33Ãó3Ì33ÏóóóÀ  ÿÿÿÿ-------------------------------------;
-;                              
+ENT  $$$ÿ ÿop Environment System (DES) Game
+;-----------------------------------------------------;
+;                    
