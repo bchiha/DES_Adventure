@@ -4,7 +4,7 @@
 
 Finally a Game for the Desktop Environment System!  Okay, this game is a Proof of Concept.  Nothing special but it could get others to develop something bigger.
 
-<img src="img/screenshot1.png" width="500" style="border:5px solid black">
+<img src="img/screenshot1.png" width="800" style="border:5px solid black">
 
 - [Background](#background)
 - [Getting Started](#getting-started)
@@ -50,13 +50,13 @@ Some things to note are:
 ### The Screen
 DES uses Mode 2 Graphics and only 2 colours.  The Screen dimensions are 80 bytes across (X-Axis) and 200 bytes down (Y-Axis).  The X-Axis bytes use the Bits of each Byte for colour selection.  A standard 'full' pixel is two bits.  Group the 8-bits into pairs, (bits 7/6, 5/4, 3/2 and 1/0).  And when setting those bits, set the pair groupings to the same value.  
 
-<img src="img/mode2.png" width="500">
+<img src="img/mode2.png" width="700">
 
 To display the pixels on the first row above, the four bytes across will be `F0, 33, CC and 3C`.  
 
 On the map, I use 16x16 pixel sprites.  This makes it easy to use the `CALL DRAWICON` routine.  The design of these sprites could be difficult to manually do.  I created a program to help with this.  
 
-<img src="img/sprite_designer.png" width="500">
+<img src="img/sprite_designer.png" width="700">
 
 It is freely available [online](https://slartibartfastbb.itch.io/amstrad-mode-2-sprite-designer).  The output on the right is the 4 bytes across and 16 down needed for the `DRAWICON` DES routine.
 
@@ -76,7 +76,7 @@ Two routines handle this.  `StoreBox` and `RestoreBox`.  If you would like to pl
 
 I use these for my About, and Information Dialogs.  Also, when moving the player on the screen.  Before I move into a square, I save the square that the player will walk into.  Once the player moves from that position, I restore the screen.  
 
-<img src="img/screenshot2.png" width="500" style="border:5px solid black">
+<img src="img/screenshot2.png" width="700" style="border:5px solid black">
 
 Lastly, I found an **error**, in the documentation.  the `RestoreBox` routine, the Entry address for the buffer should be `DE` and not `BC`.  Just look at what I do in the code.
 
@@ -84,7 +84,7 @@ Lastly, I found an **error**, in the documentation.  the `RestoreBox` routine, t
 
 Lookup Tables or Vector tables are a standard way the reference data on the Z80.  I use them often in my code.  Let's say you would like to find map number `13`.  Where is this map stored in memory?  Just place all the maps starting addresses sequentially in the table. Then use an index of `13` to point `HL` to the start of the actual map.
 
-<img src="img/vector_tables.png" width="500">
+<img src="img/vector_tables.png" width="700">
 
 In this example, I have three maps, Australia, Africa and the USA.  They are in some random location in memory.  I then put their start addresses in a sequential table from `0x2800`.  This also could be anywhere in memory.  
 
