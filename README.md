@@ -1,6 +1,6 @@
 # DES Adventure <!-- omit in toc -->
 
-## A game written for the Desktop Environment System (DES) for the Amstrad CPC <!-- omit in toc -->
+## A game written for the Desktop Environment System (DES) on the Amstrad CPC <!-- omit in toc -->
 
 Finally a Game for the Desktop Environment System!  Okay, this game is a Proof of Concept.  Nothing special but it could get others to develop something bigger.
 
