@@ -82,7 +82,7 @@ SPR_TBL:       DW      SPRGRS   ;0  GRASS
                DW      SPRRJD   ;5  ROAD JUNCTION DOWN
                DW      SPRBDG   ;6  BRIDGE
                DW      SPRLAD   ;7  DOWN LADDER
-               DW      SPRBRK   ;8  BRICK WALL
+               DW      SPRBRK   ;8  BRICK WALL <-- NON WALKABLE FROM HERE
                DW      SPRSGN   ;9  SIGN
                DW      SPRTRB   ;A  TREE BASE
                DW      SPRTRM   ;B  TREE MID
@@ -524,6 +524,6 @@ TREA_4:        DB      &FF,&FF,&FF,&FF,&C0,&00,&00,&03
                DB      &C0,&00,&00,&03,&FF,&FF,&FF,&FF
 
 
-$$ÿ ÿment System (DES) Game
+
 ;-----------------------------------------------------;
 ;                              

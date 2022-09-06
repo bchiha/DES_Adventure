@@ -27,9 +27,9 @@ WRITE "ADVENT."
         ORG     &4000
 
 ;DES JUMPBLOCK TABLE
-        READ "DESJBLK.Z80"
+        READ "DESJBLK.ASM"
 ;RAM LOCATIONS
-        READ "RAM.Z80"
+        READ "RAM.ASM"
 
 PRINT "ASSEMBLING CODE..."
 
@@ -118,7 +118,7 @@ USERLOOP:
         CALL   WAIT
 CLICK:
         OR     A          ;CHECK FOR VALID INPUT
-        CALL   Z,PING
+        CALL   Z,PING     ;NO CLICK ZONE SELECTED
         JR     Z,USERLOOP
 
         CP     &FF        ;UNKNOWN
@@ -130,8 +130,8 @@ CLICK:
         CP     &06        ;LOOK
         JP     Z,LOOKAT
 
-        CP     &06
-        JP     C,MOVEPLAYER ;MOVE PLAYER
+        CP     &06        
+        JP     C,MOVEPLAYER ;MOVE PLAYER IF LESS THAN 6
 
         JR     USERLOOP
         
@@ -156,7 +156,7 @@ D_COL:
         CALL   DRAWICON     ;DISPLAY SPRITE
         POP    HL
         INC    HL
-        LD     A,&04
+        LD     A,&04        ;MOVE TO NEXT 16x16 GRID
         ADD    D
         LD     D,A
         DJNZ   D_COL
@@ -647,23 +647,22 @@ MSGTR3:        DB      "Amstrad CPC 664 computer",0
 MSGTR4:        DB      "Ready? Z80 YouTube channel subcription",0
 
 
-
-;CLICK ZONES CONFIG
+;CLICK ZONES CONFIG.  SEE RAMZONES, LIST CONSISTS OF X1,Y1,X2,Y2
 ZONETBL:       DB      &03,&00,&06,&0A  ;MENU 1
                DB      &09,&30,&0C,&3E  ;KEY W
                DB      &04,&40,&07,&4E  ;KEY A
                DB      &09,&50,&0C,&5E  ;KEY S
                DB      &0E,&40,&11,&4E  ;KEY D
                DB      &15,&40,&1E,&4E  ;KEY L
-                
+
+;CLICK ZONE SHORTCUT KEYS, LIST OF (AMSTRAD KEY,ZONE..).  REFER TO CPC MANUAL
+;FOR AMSTRAD INTERNAL KEY NUMBER                
 KEYZTBL:       DB      52,1,59,2,69,3,60,4,61,5,36,6,34,7   ;MENU SHORTCUTS (MAP TO AMS NUMBERS)
 
 ;LOAD SPRITE DATA AT END
 
 PRINT "LOAD SPRITE DATA"
-        READ "SPRITE.Z80"
+        READ "SPRITE.ASM"
 
 PRINT "ASSEMBLING COMPLETE..."
-ENT  $$$ÿ ÿop Environment System (DES) Game
-;-----------------------------------------------------;
-;                    
+            
