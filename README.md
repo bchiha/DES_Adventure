@@ -14,6 +14,7 @@ Finally a Game for the Desktop Environment System!  Okay, this game is a Proof o
   - [Click Zones](#click-zones)
   - [Pop Up Windows or Moving Sprites](#pop-up-windows-or-moving-sprites)
   - [Lookup tables](#lookup-tables)
+  - [Mouse Inputs](#mouse-inputs)
 - [Acknowledgments](#acknowledgments)
 ## Background
 
@@ -38,11 +39,13 @@ I was going to create a "Let's Code" series on my [Youtube Channel](https://www.
 
 Just insert the [DSK](DES_Adventure.dsk), into an Amstrad running DES and click on 'ADVENT'.  Use the arrow to move, or just 'WSAD' and 'L' for Look.
 
-**Warning**: I wrote the game in about 3 days during `Isolation`. It has basic movement, map/sprite drawing and finding stuff.  Hopefully, someone other there can improve from this and do something awesome... 
+**Warning**: This game wont win any competitions!.  I wrote the game in about 3 days during `Isolation`. It has basic movement, map/sprite drawing and finding stuff.  Hopefully, someone out there can improve from this design and do something awesome... 
 
 ## Making your own Game
 
-The best way to start making your program is to look at the [code](code/ADVENT.ASM) of the game.  I've created a [DES Jumpblock name file](code/DESJBLK.ASM) to help reference DES routines by using their real name. IE: `CALL BUTTON` instead of `CALL &924B`.
+The best way to start making your program is to look at the [code](code/ADVENT.ASM) of the game.  A bit of Z80 knowledge is needed but its got through simple blocks.  To move the player, I first check what is ahead, if its a space to move into, then I restore the previous space, and draw the player on the new space.  And if the next space is off the map, I draw the new map and reset the players spot.  Nothing tricky.
+
+I've created a [DES Jumpblock name file](code/DESJBLK.ASM) to help reference DES routines by using their real name. IE: `CALL BUTTON` instead of `CALL &924B`.
 
 The [Development Manual](resources/DES_Programming.pdf) is pretty good.  Just load the correct data to the registers, and call the routine.
 
@@ -52,9 +55,9 @@ DES uses Mode 2 Graphics and only 2 colours.  The Screen dimensions are 80 bytes
 
 <img src="img/mode2.png" width="700">
 
-To display the pixels on the first row above, the four bytes across will be `F0, 33, CC and 3C`.  
+To display the pixels on the first row above, the four bytes across will be `F0, 33, CC and 3C`.  `3C` in binary is `00111100`. 
 
-On the map, I use 16x16 pixel sprites.  This makes it easy to use the `CALL DRAWICON` routine.  The design of these sprites could be difficult to manually do.  I created a program to help with this.  
+On the map, I use 16x16 pixel sprites.  This makes it easy to use the `CALL DRAWICON` routine.  Designing these sprites could be difficult to do manually.  So.. I created a program to help with this.  
 
 <img src="img/sprite_designer.png" width="700">
 
@@ -62,19 +65,19 @@ It is freely available [online](https://slartibartfastbb.itch.io/amstrad-mode-2-
 
 ### Click Zones
 
-These are areas on the screen where when the mouse is clicked (space bar), and the mouse is within a zone area, it will return the zone number.  From here, you can determine what to do.  A simple way to set this up is using the `RamZones` function.  By placing the coordinates of the zones in a list.
+These are areas on the screen where when the mouse is clicked (space bar), and the mouse is within a zone area, `CALL MOUSE` will return the zone number.  From here, you can determine what to do.  A simple way to set this up is using the `RamZones` function.  By placing the coordinates of the zones in a list.
 
 The accompany click zones with key presses, another routine is needed.  Use `ZoneKeys`, same deal.  Supply a list of click zone numbers and the associated `Amstrad` internal key number.  See the Amstrad CPC manual to find out what key maps to what number.
 
-When creating Buttons, a Click Zone will automatically be added.  There doesn't seem to be a nice way to remove this zone.  Let's say the button is part of a pop-up window.  What I did, was to put Zone creation in a Routine that I would call to re-initialise the zones, if the zones got messed up.
+When creating Buttons, a Click Zone will automatically be added.  There doesn't seem to be a nice way to remove this zone.  Let's say the button is part of a pop-up window.  What I did, was to put Click Zone creation in a Routine that I would call to re-initialise the zones, if the zones got messed up.
 
 ### Pop Up Windows or Moving Sprites
 
-You are probably familiar with pop-up windows on your current OS.  DES has these, well not really.  Consider the screen as a 2D canvas.  If something is drawn over an existing drawing, then it's gone forever.  Unless that is, you have saved the previous screen contents before writing over it.  
+You are probably familiar with pop-up windows on your current OS.  DES has these, well not really.  Consider the screen as a 2D canvas.  If something is drawn over an existing drawing, then it's gone forever.  Unless that is, you have saved the screen underneath the pop up before writing displaying the pop up.  
 
-Two routines handle this.  `StoreBox` and `RestoreBox`.  If you would like to place a message window on top of the current screen.  Like an info box, then before displaying that box, use the `StoreBox` to save the screen that will be overlayed to memory.  Once the pop-up is closed, by clicking a button. Use `RestoreBox` to redraw the previous portion of the screen.  
+Two routines handle this.  `StoreBox` and `RestoreBox`.  If you would like to place a message window on top of the current screen.  Like an info box, then before displaying that box, use the `StoreBox` to save the screen portion to memory.  Once the pop-up is closed, by clicking a button. Use `RestoreBox` to redraw the previous portion of the screen.  
 
-I use these for my About, and Information Dialogs.  Also, when moving the player on the screen.  Before I move into a square, I save the square that the player will walk into.  Once the player moves from that position, I restore the screen.  
+I use these for my About, and Information Dialogs.  Also, when moving the player on the map.  Before I move into a square, I save the square that the player will walk into.  Once the player moves from that position, I restore the map where the player was previously.  Its fast and works well.
 
 <img src="img/screenshot2.png" width="700" style="border:5px solid black">
 
@@ -92,8 +95,21 @@ To get `HL` point the correct map, I use the `VECTOR_IT` routine.  Pass in an In
 
 There are quicker ways to do this if the vector table is __aligned__.
 
-## Acknowledgments
+### Mouse Inputs
 
+The DES Mouse pointer works like the typical mouse pointers you have used in the past.  Use the arrow keys, joystick or AMX Mouse to control the pointer.  When, Space/Button A is pressed.  It registers a click.  The Spacebar or Joystick Button could be held down _indefinitely_.  A neat way to handle this is to surround the MOUSE call with WAITS.  Just like so
+
+```
+    CALL   WAIT  ;Waits until all mouse select keys are released 
+    CALL   MOUSE ;Waits for user to select using pointer
+    CALL   WAIT  ;Waits until all mouse select keys are released 
+```
+
+As the MOUSE routine is the only way to register keyboard/mouse inputs it needs to be placed somewhere in a routine that is continually checked.  The downside is that the MOUSE routine _waits_ for an input.  I initially wanted to make a SNAKE game, but there was no way to move the snake in the background while the MOUSE was polled.  Hence why the game is a _turn_ based game.
+
+There is a provided routine called `MOUSEPOS` which claims to poll the mouse and return a click if any was done.  But this routine crashed the game.  Oh well. I didn't have time to investigate.
+
+## Acknowledgments
 
 I had Peter Campbell, the Campursoft Business Manager 'test' the game before it was published.  He commented that he couldn't stop grinning seeing a game written for DES.  He also could have been constipated.  Either way, it was great to get his blessing.
 
